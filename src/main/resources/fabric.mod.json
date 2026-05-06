@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "carsmod",
+	"version": "${version}",
+	"name": "CarsMod",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/carsmod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"production.carsmod.CarsMod"
+		],
+		"fabric-datagen": [
+			"production.carsmod.CarsModDataGenerator"
+		],
+		"client": [
+			"production.carsmod.CarsModClient"
+		]
+	},
+	"mixins": [
+		"carsmod.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
