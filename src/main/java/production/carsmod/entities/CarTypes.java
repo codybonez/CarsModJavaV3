@@ -11,7 +11,7 @@ import net.minecraft.world.entity.MobCategory;
 import production.carsmod.CarsMod;
 
 public  class CarTypes {
-    public static final EntityType<Car> Car = register("Car", EntityType.Builder.<Car>of(production.carsmod.entities.Car::new, MobCategory.MISC).sized(10,10));
+    public static final EntityType<Car> Car = register("car", EntityType.Builder.<Car>of(production.carsmod.entities.Car::new, MobCategory.MISC).sized(10,10));
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
         ResourceKey<EntityType<?>> key = ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(CarsMod.MOD_ID, name));

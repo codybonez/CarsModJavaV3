@@ -6,7 +6,7 @@ import net.minecraft.resources.Identifier;
 import production.carsmod.entities.CarModel;
 
 public class CarsModModelLayers {
-    public static final ModelLayerLocation CAR = createMain("Car");
+    public static final ModelLayerLocation CAR = createMain("car");
 
     private static ModelLayerLocation createMain(String name) {
         return new ModelLayerLocation(Identifier.fromNamespaceAndPath(CarsMod.MOD_ID, name), "main");
