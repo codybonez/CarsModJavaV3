@@ -10,6 +10,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 public class Car extends VehicleEntity {
     public Car(EntityType<? extends Car> entityType, Level level) {
         super(entityType, level);
+        System.out.println("Spawn please");
     }
     public  Car(Level level){
         this(CarTypes.Car, level);
@@ -30,7 +31,13 @@ public class Car extends VehicleEntity {
 
     }
 
-//    public AttributeSupplier.Builder CreateAttributes() {
+    @Override
+    public void tick() {
+        super.tick();
+//        System.out.println("Car is alive");
+    }
+
+    //    public AttributeSupplier.Builder CreateAttributes() {
 //    return
 //
 //    }
