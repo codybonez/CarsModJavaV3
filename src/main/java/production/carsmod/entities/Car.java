@@ -8,8 +8,11 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 public class Car extends VehicleEntity {
-    public Car(EntityType<?> entityType, Level level) {
+    public Car(EntityType<? extends Car> entityType, Level level) {
         super(entityType, level);
+    }
+    public  Car(Level level){
+        this(CarTypes.Car, level);
     }
 
     @Override

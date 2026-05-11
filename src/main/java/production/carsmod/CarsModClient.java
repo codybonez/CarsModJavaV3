@@ -3,6 +3,7 @@ package production.carsmod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import production.carsmod.entities.CarModel;
 import production.carsmod.entities.CarRenderer;
 import production.carsmod.entities.CarTypes;
 
