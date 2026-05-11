@@ -16,7 +16,8 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"production.carsmod.CarsMod"
+			"production.carsmod.CarsMod",
+			"production.carsmod.entities.CarModEntity"
 		],
 		"fabric-datagen": [
 			"production.carsmod.CarsModDataGenerator"

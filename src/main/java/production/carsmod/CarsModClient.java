@@ -1,6 +1,7 @@
 package production.carsmod;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -13,14 +14,9 @@ public class CarsModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        EntityRenderers.register(CarTypes.Car, CarRenderer::new);
-        CarsModModelLayers.registerModelLayers();
+        CarTypes.registerModEntityTypes();
         CarsMod.LOGGER.info("CarsMod Initialized!");
     }
-    public class CarsModCustomEnitityClient implements  ClientModInitializer{
-        @Override
-        public void onInitializeClient(){
 
-        }
-    }
+
 }
