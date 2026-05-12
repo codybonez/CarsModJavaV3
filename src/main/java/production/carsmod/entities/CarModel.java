@@ -24,6 +24,11 @@ public class CarModel<T extends VehicleEntity> extends EntityModel<CarRenderStat
 		this.Body = root.getChild("Body");
 	}
 
+	@Override
+	public void setupAnim(CarRenderState object) {
+		super.setupAnim(object);
+	}
+
 	public static LayerDefinition getTexturedModelData() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();

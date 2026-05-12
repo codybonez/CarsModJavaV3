@@ -15,7 +15,7 @@ import production.carsmod.CarsModModelLayers;
 
 public class CarRenderer extends EntityRenderer<CarEntity, CarRenderState> {
 
-    private  final Identifier texture = Identifier.fromNamespaceAndPath(CarsMod.MOD_ID, "resources/assets/carsmod/textures/entity/car_texture.png");
+    private  final Identifier texture = Identifier.fromNamespaceAndPath(CarsMod.MOD_ID, "/textures/entity/car_texture.png");
     private final EntityModel<CarRenderState> model;
     private final RenderType renderType;
 
