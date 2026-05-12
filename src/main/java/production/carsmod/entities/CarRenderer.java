@@ -15,29 +15,29 @@ import production.carsmod.CarsModModelLayers;
 
 public class CarRenderer extends EntityRenderer<CarEntity, CarRenderState> {
 
-    private  final Identifier texture = Identifier.fromNamespaceAndPath(CarsMod.MOD_ID, "textures/yo");
+    private  final Identifier texture = Identifier.fromNamespaceAndPath(CarsMod.MOD_ID, "resources/assets/carsmod/textures/entity/car_texture.png");
     private final EntityModel<CarRenderState> model;
+    private final RenderType renderType;
 
     public CarRenderer(EntityRendererProvider.Context context) {
         super(context);
         this.model = new CarModel(context.bakeLayer(CarsModModelLayers.CAR));
-//       this.model =  new CarModel<>(context.bakeLayer(CarsModModelLayers.CAR));
-//       this.TEXTURE = Identifier.fromNamespaceAndPath(CarsMod.MOD_ID, "entities/textures/car_texture.png");
-//        modelLayerLocation.model().withPath((UnaryOperator<String>)(string -> "entities/textures/" + string + ".png") );
-        System.out.println("Car rendered");
+        this.renderType = this.model.renderType(this.texture);
+//
+        CarsMod.LOGGER.info("Car rendered");
 
     }
 
     @Override
     public void submit(CarRenderState carRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+        poseStack.pushPose();
         submitNodeCollector.submitModel(
                 this.model(), carRenderState, poseStack, this.renderType(), carRenderState.lightCoords, OverlayTexture.NO_OVERLAY, carRenderState.outlineColor, null
         );
 
-;
+        poseStack.popPose();
         super.submit(carRenderState, poseStack, submitNodeCollector, cameraRenderState);
     }
-
 
     @Override
     public CarRenderState createRenderState() {
