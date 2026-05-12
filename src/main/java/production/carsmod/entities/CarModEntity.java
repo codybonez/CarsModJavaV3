@@ -9,7 +9,7 @@ public class CarModEntity implements ModInitializer
 	@Override
 	public void onInitialize()
 	{
-
+		CarTypes.registerModEntityTypes();
 //		EntityRenderers.register(CarTypes.Car, CarRenderer::new);
 //		CarsModModelLayers.registerModelLayers();
     }

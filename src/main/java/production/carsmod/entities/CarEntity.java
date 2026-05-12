@@ -7,12 +7,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-public class Car extends VehicleEntity {
-    public Car(EntityType<? extends Car> entityType, Level level) {
+public class CarEntity extends VehicleEntity {
+    public CarEntity(EntityType<? extends CarEntity> entityType, Level level) {
         super(entityType, level);
         System.out.println("Spawn please");
     }
-    public  Car(Level level){
+    public CarEntity(Level level){
         this(CarTypes.Car, level);
     }
 

@@ -10,9 +10,10 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 
-public class CarModel<T extends VehicleEntity> extends EntityModel<CarRenderState> {
+public class CarModel<T extends VehicleEntity> extends EntityModel<EntityRenderState> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 //	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "carmodel"), "main");
 	private final ModelPart Wheels;
