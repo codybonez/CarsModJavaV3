@@ -12,7 +12,7 @@ import production.carsmod.CarsMod;
 
 public  class CarTypes {
     public static final EntityType<CarEntity> Car = register("car", EntityType.Builder.<CarEntity>of(CarEntity::new,
-            MobCategory.MISC).sized(2,2).spawnDimensionsScale(2));
+            MobCategory.MISC).sized(2,1));
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
         ResourceKey<EntityType<?>> key = ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(CarsMod.MOD_ID, name));
