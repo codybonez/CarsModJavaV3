@@ -17,7 +17,8 @@
 	"entrypoints": {
 		"main": [
 			"production.carsmod.CarsMod",
-			"production.carsmod.entities.CarModEntity"
+			"production.carsmod.entities.CarModEntity",
+			"production.carsmod.items.CarsModItems"
 		],
 		"fabric-datagen": [
 			"production.carsmod.CarsModDataGenerator"
