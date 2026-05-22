@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "carsmod:item/car.json"
+    "layer0": "carsmod:item/car_spawn_egg.png"
   }
 }
