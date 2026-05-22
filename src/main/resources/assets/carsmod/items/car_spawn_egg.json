@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "carsmod:item/car_spawn_egg"
+    "model": "carsmod:item/car_spawn_egg.png"
   }
 }
