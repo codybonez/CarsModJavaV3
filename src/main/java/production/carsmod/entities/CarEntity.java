@@ -3,38 +3,47 @@ package production.carsmod.entities;
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.dto.PlayerInfo;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ServerboundPaddleBoatPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WaterlilyBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.Nullable;
 import production.carsmod.items.CarItem;
 
 import java.util.List;
 
-public class CarEntity extends VehicleEntity{
-
-
-    private boolean inputLeft;
-    private boolean inputRight;
-    private boolean inputUp;
-    private boolean inputDown;
+public class CarEntity extends Animal implements ItemSteerable{
+    private static final float SIDEWAYS_MOVE_SPEED_FACTOR = 0.5F;
+//    private static final EntityDataAccessor<Integer> DATA_BOOST_TIME = SynchedEntityData.defineId(CarEntity.class, EntityDataSerializers.INT);
+//    private final ItemBasedSteering steering = new ItemBasedSteering(this.entityData, DATA_BOOST_TIME);
     private float deltaRotation;
 
     public CarEntity(EntityType<? extends CarEntity> entityType, Level level) {
@@ -44,6 +53,11 @@ public class CarEntity extends VehicleEntity{
 
 
     @Override
+    protected MovementEmission getMovementEmission(){
+        return Entity.MovementEmission.EVENTS;
+    }
+
+
     protected Item getDropItem() {
         return CarItem.CAR_SPAWN_EGG;
     }
@@ -54,6 +68,16 @@ public class CarEntity extends VehicleEntity{
     }
 
     @Override
+    public boolean isFood(ItemStack itemStack) {
+        return false;
+    }
+
+    @Override
+    public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+        return null;
+    }
+
+    @Override
     protected void addAdditionalSaveData(ValueOutput valueOutput) {
 
     }
@@ -61,62 +85,25 @@ public class CarEntity extends VehicleEntity{
     @Override
     public void tick() {
         super.tick();
-//        this.move(MoverType.SELF, this.getDeltaMovement());
-//
-//        this.controlBoat();
 
-//        this.move(MoverType.SELF, this.getDeltaMovement());
+//
+
+        if (this.level().isClientSide()) {
+            this.move(MoverType.SELF, this.getDeltaMovement());
+        }
     }
+public static AttributeSupplier.Builder createAttributes() {
+    return Animal.createAnimalAttributes().add(Attributes.MAX_HEALTH, 1000.0).add(Attributes.MOVEMENT_SPEED, 1)
+            .add(Attributes.KNOCKBACK_RESISTANCE, 100);
+}
 
-//    private void controlBoat() {
-//        if (this.isVehicle()) {
-//            float f = 0.0F;
-//            if (this.inputLeft) {
-//                this.deltaRotation--;
-//            }
-//
-//            if (this.inputRight) {
-//                this.deltaRotation++;
-//            }
-//
-//            if (this.inputRight != this.inputLeft && !this.inputUp && !this.inputDown) {
-//                f += 0.005F;
-//            }
-//
-//            this.setYRot(this.getYRot() + this.deltaRotation);
-//
-//            if (this.inputUp) {
-//                f += 0.04F;
-//            }
-//
-//            if (this.inputDown) {
-//                f -= 0.005F;
-//            }
-//
-//            this.setDeltaMovement(
-//                    this.getDeltaMovement().add(Mth.sin(-this.getYRot() * (float) (Math.PI / 180.0)) * f, 0.0, Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)) * f)
-//            );
-//
-//        }
-//    }
-//    public void setInput(boolean bl, boolean bl2, boolean bl3, boolean bl4) {
-//        this.inputLeft = bl;
-//        this.inputRight = bl2;
-//        this.inputUp = bl3;
-//        this.inputDown = bl4;
-//    }
-//    }
     @Override
     public boolean startRiding(Entity entity, boolean bl, boolean bl2) {
 
         return true;
     }
 
-    @Override
-    public void move(MoverType moverType, Vec3 vec3) {
-
-        super.move(moverType, vec3);
-    }
+//
     protected void clampRotation(Entity entity) {
         entity.setYBodyRot(0);
         float f = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
@@ -125,33 +112,123 @@ public class CarEntity extends VehicleEntity{
         entity.setYRot(entity.getYRot() + g - f);
         entity.setYHeadRot(entity.getYRot());
     }
+
     @Override
     protected void positionRider(Entity entity, MoveFunction moveFunction) {
         super.positionRider(entity, moveFunction);
 //        if (entity instanceof LivingEntity) {
 //            ((LivingEntity)entity).yBodyRot = this.yRotO;
 //        }
-        entity.setYRot(entity.getYRot() + this.deltaRotation);
-        entity.setYHeadRot(entity.getYHeadRot() + this.deltaRotation);
+//        entity.setYRot(entity.getYRot() + this.deltaRotation);
+//        entity.setYHeadRot(entity.getYHeadRot() + this.deltaRotation);
         this.clampRotation(entity);
         if (entity instanceof Animal) {
-            int i = entity.getId() % 2 == 0 ? 90 : 270;
+            int i = entity.getId() % 2 == 0 ? 90 : 360;
             entity.setYBodyRot(((Animal) entity).yBodyRot + i);
             entity.setYHeadRot(entity.getYHeadRot() + i);
+//        }
+            super.positionRider(entity, moveFunction);
+            if (entity instanceof LivingEntity) {
+                ((LivingEntity) entity).yBodyRot = this.yBodyRot;
+            }
         }
     }
-        @Override
+    protected Vec2 getRiddenRotation(LivingEntity livingEntity) {
+        return new Vec2(livingEntity.getXRot() * 0.5F, livingEntity.getYRot());
+    }
+    @Override
+    protected void tickRidden(Player player, Vec3 vec3) {
+        super.tickRidden(player, vec3);
+        Vec2 vec2 = this.getRiddenRotation(player);
+        this.setRot(vec2.y, vec2.x);
+//        this.setRot(player.getYRot(), player.getXRot() * 0.5F);
+        this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
+       // this.steering.tickBoost();
+    }
+
+    @Override
+    protected Vec3 getRiddenInput(Player player, Vec3 vec3) {
+        float f = player.xxa * 0.5F;
+        float g = player.zza;
+        if (g <= 0.0F) {
+            g *= 0.25F;
+        }
+
+        return new Vec3(f, 0.0, g);
+
+
+
+    }
+    @Nullable
+    private Vec3 getDismountLocationInDirection(Vec3 vec3, LivingEntity livingEntity) {
+        double d = this.getX() + vec3.x;
+        double e = this.getBoundingBox().minY;
+        double f = this.getZ() + vec3.z;
+        BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+
+        for (Pose pose : livingEntity.getDismountPoses()) {
+            mutableBlockPos.set(d, e, f);
+            double g = this.getBoundingBox().maxY + 0.75;
+
+            do {
+                double h = this.level().getBlockFloorHeight(mutableBlockPos);
+                if (mutableBlockPos.getY() + h > g) {
+                    break;
+                }
+
+                if (DismountHelper.isBlockFloorValid(h)) {
+                    AABB aABB = livingEntity.getLocalBoundsForPose(pose);
+                    Vec3 vec32 = new Vec3(d, mutableBlockPos.getY() + h, f);
+                    if (DismountHelper.canDismountTo(this.level(), livingEntity, aABB.move(vec32))) {
+                        livingEntity.setPose(pose);
+                        return vec32;
+                    }
+                }
+
+                mutableBlockPos.move(Direction.UP);
+            } while (!(mutableBlockPos.getY() < g));
+        }
+
+        return null;
+    }
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity livingEntity) {
+        Vec3 vec3 = getCollisionHorizontalEscapeVector(
+                this.getBbWidth(), livingEntity.getBbWidth(), this.getYRot() + (livingEntity.getMainArm() == HumanoidArm.RIGHT ? 90.0F : -90.0F)
+        );
+        Vec3 vec32 = this.getDismountLocationInDirection(vec3, livingEntity);
+        if (vec32 != null) {
+            return vec32;
+        } else {
+            Vec3 vec33 = getCollisionHorizontalEscapeVector(
+                    this.getBbWidth(), livingEntity.getBbWidth(), this.getYRot() + (livingEntity.getMainArm() == HumanoidArm.LEFT ? 90.0F : -90.0F)
+            );
+            Vec3 vec34 = this.getDismountLocationInDirection(vec33, livingEntity);
+            return vec34 != null ? vec34 : this.position();
+        }
+    }
+    @Override
+    protected float getRiddenSpeed(Player player) {
+        return (float)(this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.225);
+    }
+
+    @Override
         public boolean isPickable () {
             return true;
         }
 
-        @Override
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
+
+    @Override
         public LivingEntity getControllingPassenger () {
             return this.getFirstPassenger() instanceof Player player ? player : super.getControllingPassenger();
 
         }
 
-        @Override
+    @Override
         public InteractionResult interact (Player player, InteractionHand hand){
             InteractionResult superInteraction = super.interact(player, hand);
             if (superInteraction != InteractionResult.PASS) {
@@ -166,6 +243,11 @@ public class CarEntity extends VehicleEntity{
                         : InteractionResult.SUCCESS);
             }
         }
+
+    @Override
+    public boolean boost() {
+        return false;
+    }
 //    public AttributeSupplier.Builder CreateAttributes() {
 //    return
 //

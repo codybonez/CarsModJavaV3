@@ -1,5 +1,6 @@
 package production.carsmod.entities;
 
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -20,5 +21,8 @@ public  class CarTypes {
     }
     public static void registerModEntityTypes(){
         CarsMod.LOGGER.info("Registering EntityTypes for "+ CarsMod.MOD_ID);
+    }
+    public static void registerAttributes() {
+        FabricDefaultAttributeRegistry.register(Car, CarEntity.createAttributes());
     }
 }

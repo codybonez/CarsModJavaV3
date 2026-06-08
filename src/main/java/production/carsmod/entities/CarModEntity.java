@@ -10,6 +10,7 @@ public class CarModEntity implements ModInitializer
 	public void onInitialize()
 	{
 		CarTypes.registerModEntityTypes();
+		CarTypes.registerAttributes();
 //		EntityRenderers.register(CarTypes.Car, CarRenderer::new);
 //		CarsModModelLayers.registerModelLayers();
     }
