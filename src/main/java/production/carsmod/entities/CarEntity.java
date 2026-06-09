@@ -17,8 +17,10 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.pig.PigVariants;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.variant.VariantUtils;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
@@ -42,12 +44,27 @@ import java.util.List;
 
 public class CarEntity extends Animal implements ItemSteerable{
     private static final float SIDEWAYS_MOVE_SPEED_FACTOR = 0.5F;
-//    private static final EntityDataAccessor<Integer> DATA_BOOST_TIME = SynchedEntityData.defineId(CarEntity.class, EntityDataSerializers.INT);
-//    private final ItemBasedSteering steering = new ItemBasedSteering(this.entityData, DATA_BOOST_TIME);
+    private static final EntityDataAccessor<Integer> DATA_BOOST_TIME = SynchedEntityData.defineId(CarEntity.class, EntityDataSerializers.INT);
+    private final ItemBasedSteering steering = new ItemBasedSteering(this.entityData, DATA_BOOST_TIME);
     private float deltaRotation;
 
     public CarEntity(EntityType<? extends CarEntity> entityType, Level level) {
         super(entityType, level);
+
+    }
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> entityDataAccessor) {
+        if (DATA_BOOST_TIME.equals(entityDataAccessor) && this.level().isClientSide()) {
+            this.steering.onSynced();
+        }
+
+        super.onSyncedDataUpdated(entityDataAccessor);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_BOOST_TIME, 0);
 
     }
 
@@ -105,12 +122,25 @@ public static AttributeSupplier.Builder createAttributes() {
 
 //
     protected void clampRotation(Entity entity) {
-        entity.setYBodyRot(0);
+//        entity.setYBodyRot(0);
+//        float f = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+//        float g = Mth.clamp(f, -360.0F, 360.0F);
+//        entity.yRotO += g - f;
+//        entity.setYRot(entity.getYRot() + g - f);
+//        entity.setYHeadRot(entity.getYRot());
+
+
+
+        entity.setYBodyRot(this.getYRot());
         float f = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
-        float g = Mth.clamp(f, -360.0F, 360.0F);
+        float g = Mth.clamp(f, -105.0F, 105.0F);
         entity.yRotO += g - f;
         entity.setYRot(entity.getYRot() + g - f);
         entity.setYHeadRot(entity.getYRot());
+
+
+
+
     }
 
     @Override
@@ -127,10 +157,10 @@ public static AttributeSupplier.Builder createAttributes() {
             entity.setYBodyRot(((Animal) entity).yBodyRot + i);
             entity.setYHeadRot(entity.getYHeadRot() + i);
 //        }
-            super.positionRider(entity, moveFunction);
-            if (entity instanceof LivingEntity) {
-                ((LivingEntity) entity).yBodyRot = this.yBodyRot;
-            }
+//            super.positionRider(entity, moveFunction);
+//            if (entity instanceof LivingEntity) {
+//                ((LivingEntity) entity).yBodyRot = this.yBodyRot;
+//            }
         }
     }
     protected Vec2 getRiddenRotation(LivingEntity livingEntity) {
@@ -138,11 +168,16 @@ public static AttributeSupplier.Builder createAttributes() {
     }
     @Override
     protected void tickRidden(Player player, Vec3 vec3) {
+
         super.tickRidden(player, vec3);
-        Vec2 vec2 = this.getRiddenRotation(player);
-        this.setRot(vec2.y, vec2.x);
-//        this.setRot(player.getYRot(), player.getXRot() * 0.5F);
+        this.setRot(player.getYRot(), player.getXRot() * 0.5F);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
+        //      super.tickRidden(player, vec3);
+        //        Vec2 vec2 = this.getRiddenRotation(player);
+        //        this.setRot(vec2.y, vec2.x);
+        this.steering.tickBoost();
+////        this.setRot(player.getYRot(), player.getXRot() * 0.5F);
+//        this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
        // this.steering.tickBoost();
     }
 
@@ -246,7 +281,7 @@ public static AttributeSupplier.Builder createAttributes() {
 
     @Override
     public boolean boost() {
-        return false;
+        return this.steering.boost(this.getRandom());
     }
 //    public AttributeSupplier.Builder CreateAttributes() {
 //    return
