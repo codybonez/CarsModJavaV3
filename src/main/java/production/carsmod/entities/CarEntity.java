@@ -2,6 +2,7 @@ package production.carsmod.entities;
 
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.dto.PlayerInfo;
+import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundPaddleBoatPacket;
@@ -9,14 +10,18 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.happyghast.HappyGhast;
 import net.minecraft.world.entity.animal.pig.PigVariants;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.entity.player.Player;
@@ -105,11 +110,28 @@ public class CarEntity extends Animal implements ItemSteerable{
 
 //
 
-        if (this.level().isClientSide()) {
-            this.move(MoverType.SELF, this.getDeltaMovement());
-        }
+
     }
-public static AttributeSupplier.Builder createAttributes() {
+
+    @Override
+    protected void playStepSound(BlockPos blockPos, BlockState blockState) {
+        this.playSound(SoundEvents.SPIDER_STEP, 0.15F, 2.0F);
+
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return  SoundEvents.VINDICATOR_CELEBRATE;
+    }
+
+    @Override
+    protected @Nullable SoundEvent getHurtSound(DamageSource damageSource) {
+        return SoundEvents.ANVIL_PLACE;
+    }
+
+
+
+    public static AttributeSupplier.Builder createAttributes() {
     return Animal.createAnimalAttributes().add(Attributes.MAX_HEALTH, 1000.0).add(Attributes.MOVEMENT_SPEED, 1)
             .add(Attributes.KNOCKBACK_RESISTANCE, 100);
 }
@@ -170,16 +192,17 @@ public static AttributeSupplier.Builder createAttributes() {
     protected void tickRidden(Player player, Vec3 vec3) {
 
         super.tickRidden(player, vec3);
-        this.setRot(player.getYRot(), player.getXRot() * 0.5F);
-        this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
-        //      super.tickRidden(player, vec3);
-        //        Vec2 vec2 = this.getRiddenRotation(player);
-        //        this.setRot(vec2.y, vec2.x);
-        this.steering.tickBoost();
-////        this.setRot(player.getYRot(), player.getXRot() * 0.5F);
-//        this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
-       // this.steering.tickBoost();
+        Vec2 vec2 = this.getRiddenRotation(player);
+        float f = this.getYRot();
+        float g = Mth.wrapDegrees(vec2.y - f);
+        float h = 0.08F;
+        f += g * 0.08F;
+        this.setRot(f, vec2.x);
+        this.yRotO = this.yBodyRot = this.yHeadRot = f;
+
     }
+
+
 
     @Override
     protected Vec3 getRiddenInput(Player player, Vec3 vec3) {

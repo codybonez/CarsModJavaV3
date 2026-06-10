@@ -1,15 +1,24 @@
 package production.carsmod.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.LivingEntity;
+import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 import org.jspecify.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import production.carsmod.CarsMod;
 import production.carsmod.CarsModModelLayers;
 
@@ -33,6 +42,11 @@ public class CarRenderer extends EntityRenderer<CarEntity, CarRenderState> {
 
     public void submit(CarRenderState carRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
         poseStack.pushPose();
+
+
+
+        float angle = (System.currentTimeMillis() / 50) % 360; // simple rotation
+        poseStack.mulPose(Axis.YP.rotationDegrees(angle));
         submitNodeCollector.submitModel(
                 this.model(), carRenderState, poseStack, this.renderType(), carRenderState.lightCoords, OverlayTexture.NO_OVERLAY, carRenderState.outlineColor, null
         );
@@ -53,6 +67,8 @@ public class CarRenderer extends EntityRenderer<CarEntity, CarRenderState> {
     protected RenderType renderType() {
         return this.model.renderType(this.texture);
     }
+
+
 }
 
 
