@@ -126,13 +126,13 @@ public class CarEntity extends Animal implements ItemSteerable{
 
     @Override
     protected @Nullable SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.ANVIL_PLACE;
+        return SoundEvents.TOTEM_USE;
     }
 
 
 
     public static AttributeSupplier.Builder createAttributes() {
-    return Animal.createAnimalAttributes().add(Attributes.MAX_HEALTH, 1000.0).add(Attributes.MOVEMENT_SPEED, 1)
+    return Animal.createAnimalAttributes().add(Attributes.MAX_HEALTH, 1000.0).add(Attributes.MOVEMENT_SPEED, 2)
             .add(Attributes.KNOCKBACK_RESISTANCE, 100);
 }
 
@@ -143,27 +143,7 @@ public class CarEntity extends Animal implements ItemSteerable{
     }
 
 //
-    protected void clampRotation(Entity entity) {
-//        entity.setYBodyRot(0);
-//        float f = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
-//        float g = Mth.clamp(f, -360.0F, 360.0F);
-//        entity.yRotO += g - f;
-//        entity.setYRot(entity.getYRot() + g - f);
-//        entity.setYHeadRot(entity.getYRot());
 
-
-
-        entity.setYBodyRot(this.getYRot());
-        float f = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
-        float g = Mth.clamp(f, -105.0F, 105.0F);
-        entity.yRotO += g - f;
-        entity.setYRot(entity.getYRot() + g - f);
-        entity.setYHeadRot(entity.getYRot());
-
-
-
-
-    }
 
     @Override
     protected void positionRider(Entity entity, MoveFunction moveFunction) {
@@ -173,7 +153,7 @@ public class CarEntity extends Animal implements ItemSteerable{
         }
     }
     protected Vec2 getRiddenRotation(LivingEntity livingEntity) {
-        return new Vec2(livingEntity.getXRot() * 0.5F, livingEntity.getYRot());
+        return new Vec2(livingEntity.getXRot() * 0.75F, livingEntity.getYRot());
     }
     @Override
     protected void tickRidden(Player player, Vec3 vec3) {
@@ -183,7 +163,7 @@ public class CarEntity extends Animal implements ItemSteerable{
         float f = this.getYRot();
         float g = Mth.wrapDegrees(vec2.y - f);
         float h = 0.08F;
-        f += g * 0.08F;
+        f += g * 0.1F;
         this.setRot(f, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = f;
 
@@ -193,7 +173,7 @@ public class CarEntity extends Animal implements ItemSteerable{
 
     @Override
     protected Vec3 getRiddenInput(Player player, Vec3 vec3) {
-        float f = player.xxa * 0.5F;
+        float f = player.xxa * 1.2F;
         float g = player.zza;
         if (g <= 0.0F) {
             g *= 0.25F;
