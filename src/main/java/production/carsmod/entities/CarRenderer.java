@@ -7,11 +7,14 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.BoatRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Quaternionfc;
 import org.jspecify.annotations.Nullable;
@@ -44,9 +47,12 @@ public class CarRenderer extends EntityRenderer<CarEntity, CarRenderState> {
         poseStack.pushPose();
 
 
+        poseStack.translate(0.0F, 0.375F, 0.0F);
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - carRenderState.yRot));
+//        poseStack.mulPose(Axis.YP.rotation(30));
 
-        float angle = (System.currentTimeMillis() / 50) % 360; // simple rotation
-        poseStack.mulPose(Axis.YP.rotationDegrees(angle));
+        poseStack.scale(-1.0F, -1.0F, 1.0F);
+
         submitNodeCollector.submitModel(
                 this.model(), carRenderState, poseStack, this.renderType(), carRenderState.lightCoords, OverlayTexture.NO_OVERLAY, carRenderState.outlineColor, null
         );
@@ -68,7 +74,12 @@ public class CarRenderer extends EntityRenderer<CarEntity, CarRenderState> {
         return this.model.renderType(this.texture);
     }
 
+    public void extractRenderState(CarEntity entity, CarRenderState renderState, float f) {
+        super.extractRenderState(entity, renderState, f);
+        renderState.yRot = entity.getYRot(f);
 
+
+}
 }
 
 

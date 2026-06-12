@@ -168,21 +168,8 @@ public class CarEntity extends Animal implements ItemSteerable{
     @Override
     protected void positionRider(Entity entity, MoveFunction moveFunction) {
         super.positionRider(entity, moveFunction);
-//        if (entity instanceof LivingEntity) {
-//            ((LivingEntity)entity).yBodyRot = this.yRotO;
-//        }
-//        entity.setYRot(entity.getYRot() + this.deltaRotation);
-//        entity.setYHeadRot(entity.getYHeadRot() + this.deltaRotation);
-        this.clampRotation(entity);
-        if (entity instanceof Animal) {
-            int i = entity.getId() % 2 == 0 ? 90 : 360;
-            entity.setYBodyRot(((Animal) entity).yBodyRot + i);
-            entity.setYHeadRot(entity.getYHeadRot() + i);
-//        }
-//            super.positionRider(entity, moveFunction);
-//            if (entity instanceof LivingEntity) {
-//                ((LivingEntity) entity).yBodyRot = this.yBodyRot;
-//            }
+      	if (entity instanceof LivingEntity) {
+            ((LivingEntity) entity).yBodyRot = this.yBodyRot;
         }
     }
     protected Vec2 getRiddenRotation(LivingEntity livingEntity) {
