@@ -184,6 +184,12 @@ public class CarEntity extends Animal implements ItemSteerable{
 
 
     }
+    public void setInitialPos(double d, double e, double f) {
+        this.setPos(d, e, f);
+        this.xo = d;
+        this.yo = e;
+        this.zo = f;
+    }
     @Nullable
     private Vec3 getDismountLocationInDirection(Vec3 vec3, LivingEntity livingEntity) {
         double d = this.getX() + vec3.x;

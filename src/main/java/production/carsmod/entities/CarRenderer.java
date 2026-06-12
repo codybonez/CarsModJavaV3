@@ -47,8 +47,9 @@ public class CarRenderer extends EntityRenderer<CarEntity, CarRenderState> {
         poseStack.pushPose();
 
 
-//        poseStack.translate(0.0F, 0.375F, 0.0F);
+        poseStack.translate(0.0F, 0.0f, 0.0F);
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - carRenderState.yRot));
+
 //        poseStack.mulPose(Axis.YP.rotation(30));
 
         poseStack.scale(1.0F, 1.0F, -1.0F);

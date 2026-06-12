@@ -33,15 +33,16 @@ public class CarModel<T extends Animal> extends EntityModel<CarRenderState> {
 	public static LayerDefinition getTexturedModelData() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
-		PartDefinition Wheels = partdefinition.addOrReplaceChild("Wheels", CubeListBuilder.create().texOffs(-1, -2).addBox(6.3F, -1.0F, -9.0F, 2.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(-3, -2).addBox(-8.8F, -1.0F, -9.0F, 2.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(0, -2).addBox(6.2F, -1.0F, 5.0F, 2.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(-3, -2).addBox(-8.8F, -1.0F, 5.0F, 2.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.2F, 0.8F, 0.0F));
+		PartDefinition Wheels = partdefinition.addOrReplaceChild("Wheels", CubeListBuilder.create().texOffs(72, 52).addBox(6.3F, -1.0F, -9.0F, 2.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(72, 60).addBox(-8.8F, -1.0F, -9.0F, 2.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 75).addBox(6.2F, -1.0F, 5.0F, 2.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(72, 68).addBox(-8.8F, -1.0F, 5.0F, 2.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.2F, 0.8F, 0.0F));
 
-		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(-23, -21).addBox(-7.6F, 1.7F, -11.1F, 16.0F, 6.0F, 23.0F, new CubeDeformation(0.0F))
-				.texOffs(-22, -20).addBox(-7.6F, 7.7F, -11.0F, 16.0F, 1.0F, 22.0F, new CubeDeformation(0.0F))
-				.texOffs(-21, -20).addBox(-6.6F, 0.6F, -11.0F, 14.0F, 1.0F, 22.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.5F, 3.0F, 0.0F));
-		return LayerDefinition.create(meshdefinition, 16, 16);
+		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 0).addBox(-7.6F, 1.7F, -11.1F, 16.0F, 6.0F, 23.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 29).addBox(-7.6F, 7.7F, -11.0F, 16.0F, 1.0F, 22.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 52).addBox(-6.6F, 0.6F, -11.0F, 14.0F, 1.0F, 22.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.5F, 3.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 128, 128);
 
 
 	}
