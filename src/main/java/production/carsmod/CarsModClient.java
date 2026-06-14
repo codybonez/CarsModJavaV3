@@ -15,10 +15,10 @@ import production.carsmod.entities.CarTypes;
 public class CarsModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-//        EntityRendererRegistry.register(CarTypes.Car, CarRenderer::new);
-        EntityModelLayerRegistry.registerModelLayer(CarsModModelLayers.CAR, CarModel::getTexturedModelData);
-        EntityRendererRegistryImpl.register(CarTypes.Car, CarRenderer::new);
 
+        EntityModelLayerRegistry.registerModelLayer(CarsModModelLayers.CAR, CarModel::getTexturedModelData);
+
+        EntityRendererRegistryImpl.register(CarTypes.Car, CarRenderer::new);
         CarsMod.LOGGER.info("CarsMod Initialized!");
     }
 

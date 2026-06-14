@@ -1,18 +1,14 @@
 package production.carsmod.entities;
 
-import com.google.common.collect.Lists;
-import com.mojang.realmsclient.dto.PlayerInfo;
-import net.minecraft.client.resources.sounds.Sound;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.game.ServerboundPaddleBoatPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -21,37 +17,26 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.happyghast.HappyGhast;
-import net.minecraft.world.entity.animal.pig.PigVariants;
-import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.variant.VariantUtils;
 import net.minecraft.world.entity.vehicle.DismountHelper;
-import net.minecraft.world.entity.vehicle.VehicleEntity;
-import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.WaterlilyBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 import production.carsmod.items.CarItem;
 
-import java.util.List;
+
 
 public class CarEntity extends Animal implements ItemSteerable{
     private static final float SIDEWAYS_MOVE_SPEED_FACTOR = 0.5F;
     private static final EntityDataAccessor<Integer> DATA_BOOST_TIME = SynchedEntityData.defineId(CarEntity.class, EntityDataSerializers.INT);
     private final ItemBasedSteering steering = new ItemBasedSteering(this.entityData, DATA_BOOST_TIME);
-    private float deltaRotation;
+
 
     public CarEntity(EntityType<? extends CarEntity> entityType, Level level) {
         super(entityType, level);
@@ -113,20 +98,16 @@ public class CarEntity extends Animal implements ItemSteerable{
 
     }
 
-    @Override
-    protected void playStepSound(BlockPos blockPos, BlockState blockState) {
-        this.playSound(SoundEvents.SPIDER_STEP, 0.15F, 2.0F);
 
-    }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return  SoundEvents.VINDICATOR_CELEBRATE;
+        return SoundEvents.VINDICATOR_CELEBRATE;
     }
 
     @Override
     protected @Nullable SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.TOTEM_USE;
+        return SoundEvents.COPPER_GOLEM_STATUE_BREAK;
     }
 
 
@@ -162,7 +143,7 @@ public class CarEntity extends Animal implements ItemSteerable{
         Vec2 vec2 = this.getRiddenRotation(player);
         float f = this.getYRot();
         float g = Mth.wrapDegrees(vec2.y - f);
-        float h = 0.08F;
+
         f += g * 0.1F;
         this.setRot(f, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = f;
@@ -184,12 +165,7 @@ public class CarEntity extends Animal implements ItemSteerable{
 
 
     }
-    public void setInitialPos(double d, double e, double f) {
-        this.setPos(d, e, f);
-        this.xo = d;
-        this.yo = e;
-        this.zo = f;
-    }
+
     @Nullable
     private Vec3 getDismountLocationInDirection(Vec3 vec3, LivingEntity livingEntity) {
         double d = this.getX() + vec3.x;
