@@ -30,7 +30,7 @@ public class CarRenderer extends EntityRenderer<CarEntity, CarRenderState> {
 
     private  final Identifier texture = Identifier.fromNamespaceAndPath(CarsMod.MOD_ID, "/textures/entity/car_texture.png");
     private final EntityModel<CarRenderState> model;
-    private final RenderType renderType;
+    public final RenderType renderType;
 
     public CarRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -48,9 +48,10 @@ public class CarRenderer extends EntityRenderer<CarEntity, CarRenderState> {
 
 
         poseStack.translate(0.0F, 0.0f, 0.0F);
+
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - carRenderState.yRot));
 
-//        poseStack.mulPose(Axis.YP.rotation(30));
+
 
         poseStack.scale(1.0F, 1.0F, -1.0F);
 

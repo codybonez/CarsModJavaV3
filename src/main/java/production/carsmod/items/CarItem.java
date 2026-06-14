@@ -26,16 +26,12 @@ import production.carsmod.entities.CarTypes;
 import java.util.function.Function;
 
 public class CarItem extends Item {
-    private final EntityType<? extends CarEntity> entityType;
+    public final EntityType<? extends CarEntity> entityType;
     public CarItem(Properties properties, EntityType<? extends CarEntity> entityType) {
         super(properties);
         this.entityType = entityType;
     }
-    public CarItem(EntityType<? extends CarEntity> entityType, Item.Properties properties) {
-        super(properties);
-        this.entityType = entityType;
 
-    }
     public static <T extends Item> T register(String name, Function<Properties, T> itemFactory, Item.Properties settings) {
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(CarsMod.MOD_ID, name));
 
@@ -47,19 +43,10 @@ public class CarItem extends Item {
 
         return item;
     }
-    @Nullable
-    private CarEntity getCar(Level level, HitResult hitResult, ItemStack itemStack, Player player) {
-        CarEntity car = this.entityType.create(level, EntitySpawnReason.SPAWN_ITEM_USE);
-        if (car != null) {
-            Vec3 vec3 = hitResult.getLocation();
-            car.setInitialPos(vec3.x, vec3.y, vec3.z);
-            if (level instanceof ServerLevel serverLevel) {
-                EntityType.createDefaultStackConfig(serverLevel, itemStack, player).accept(car);
-            }
-        }
 
-        return car;
-    }
+
+
+
     public static void initialize() {
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS)
                 .register((itemGroup) -> itemGroup.accept(CarItem.CAR_SPAWN_EGG));
