@@ -3,13 +3,13 @@
 	"id": "carsmod",
 	"version": "${version}",
 	"name": "CarsMod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Carsmod is a simple car mod which aims at creating faster transportation!",
 	"authors": [
 		"Me!"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/codybonez/CarsModJavaV3"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/carsmod/icon.png",
