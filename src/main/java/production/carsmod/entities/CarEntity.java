@@ -33,7 +33,7 @@ import production.carsmod.items.CarItem;
 
 
 public class CarEntity extends Animal implements ItemSteerable{
-    private static final float SIDEWAYS_MOVE_SPEED_FACTOR = 0.5F;
+
     private static final EntityDataAccessor<Integer> DATA_BOOST_TIME = SynchedEntityData.defineId(CarEntity.class, EntityDataSerializers.INT);
     private final ItemBasedSteering steering = new ItemBasedSteering(this.entityData, DATA_BOOST_TIME);
 
