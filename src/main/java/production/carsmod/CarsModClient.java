@@ -16,7 +16,7 @@ public class CarsModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        EntityModelLayerRegistry.registerModelLayer(CarsModModelLayers.CAR, CarModel::getTexturedModelData);
+        CarsModModelLayers.registerModelLayers();
 
         EntityRendererRegistryImpl.register(CarTypes.Car, CarRenderer::new);
         CarsMod.LOGGER.info("CarsMod Initialized!");
