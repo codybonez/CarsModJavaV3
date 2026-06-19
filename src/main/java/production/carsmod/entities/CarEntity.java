@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -100,12 +101,12 @@ public class CarEntity extends Animal implements ItemSteerable{
 
 
 
-    @Override
+
     protected SoundEvent getDeathSound() {
         return SoundEvents.VINDICATOR_CELEBRATE;
     }
 
-    @Override
+
     protected @Nullable SoundEvent getHurtSound(DamageSource damageSource) {
         return SoundEvents.COPPER_GOLEM_STATUE_BREAK;
     }
