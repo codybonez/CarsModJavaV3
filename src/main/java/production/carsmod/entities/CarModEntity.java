@@ -10,7 +10,7 @@ public class CarModEntity implements ModInitializer
 	public void onInitialize()
 	{
 		CarTypes.registerModEntityTypes();
-		CarTypes.registerAttributes();
+//		CarTypes.registerAttributes();
 
     }
 }

@@ -22,6 +22,7 @@ import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -31,13 +32,14 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import production.carsmod.items.CarItem;
 
+import javax.swing.text.JTextComponent;
 
 
-public class CarEntity extends Animal implements ItemSteerable{
+public class CarEntity extends VehicleEntity implements ItemSteerable{
 
     private static final EntityDataAccessor<Integer> DATA_BOOST_TIME = SynchedEntityData.defineId(CarEntity.class, EntityDataSerializers.INT);
     private final ItemBasedSteering steering = new ItemBasedSteering(this.entityData, DATA_BOOST_TIME);
-
+    private float deltaRotation;
 
     public CarEntity(EntityType<? extends CarEntity> entityType, Level level) {
         super(entityType, level);
@@ -75,15 +77,15 @@ public class CarEntity extends Animal implements ItemSteerable{
 
     }
 
-    @Override
-    public boolean isFood(ItemStack itemStack) {
-        return false;
-    }
-
-    @Override
-    public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
-        return null;
-    }
+//    @Override
+//    public boolean isFood(ItemStack itemStack) {
+//        return false;
+//    }
+//
+//    @Override
+//    public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+//        return null;
+//    }
 
     @Override
     protected void addAdditionalSaveData(ValueOutput valueOutput) {
@@ -93,13 +95,36 @@ public class CarEntity extends Animal implements ItemSteerable{
     @Override
     public void tick() {
         super.tick();
+        move(MoverType.PLAYER, this.getDeltaMovement());
 
-//
+
+
 
 
     }
 
+    @Override
+    public void move(MoverType moverType, Vec3 vec3) {
 
+        super.move(moverType, vec3);
+        double d = -this.getGravity();
+        double e = 0.0;
+        float f = 0.05F;
+
+        vec3 = this.getDeltaMovement();
+        this.setDeltaMovement(vec3.x * f, vec3.y + d, vec3.z * f);
+        this.deltaRotation *= f;
+        if (e > 0.0) {
+            Vec3 vec32 = this.getDeltaMovement();
+            this.setDeltaMovement(d,e,f);
+        }
+
+    }
+
+    @Override
+    public Pose getPose() {
+        return super.getPose();
+    }
 
 
     protected SoundEvent getDeathSound() {
@@ -113,10 +138,10 @@ public class CarEntity extends Animal implements ItemSteerable{
 
 
 
-    public static AttributeSupplier.Builder createAttributes() {
-    return Animal.createAnimalAttributes().add(Attributes.MAX_HEALTH, 1000.0).add(Attributes.MOVEMENT_SPEED, 2)
-            .add(Attributes.KNOCKBACK_RESISTANCE, 100);
-}
+//    public static AttributeSupplier.Builder createAttributes() {
+//    return Animal.createAnimalAttributes().add(Attributes.MAX_HEALTH, 1000.0).add(Attributes.MOVEMENT_SPEED, 2)
+//            .add(Attributes.KNOCKBACK_RESISTANCE, 100);
+//}
 
     @Override
     public boolean startRiding(Entity entity, boolean bl, boolean bl2) {
@@ -128,32 +153,46 @@ public class CarEntity extends Animal implements ItemSteerable{
 
 
     @Override
+    protected double getDefaultGravity() {
+        return 0.04;
+    }
+
+    @Override
     protected void positionRider(Entity entity, MoveFunction moveFunction) {
         super.positionRider(entity, moveFunction);
-      	if (entity instanceof LivingEntity) {
-            ((LivingEntity) entity).yBodyRot = this.yBodyRot;
+        if (entity instanceof LivingEntity) {
+            entity.setYRot(entity.getYRot() + this.deltaRotation);
+            entity.setYHeadRot(entity.getYHeadRot() + this.deltaRotation);
+            this.clampRotation(entity);
+            if (entity instanceof Animal && this.getPassengers().size() == 1) {
+                int i = entity.getId() % 2 == 0 ? 90 : 270;
+                entity.setYBodyRot(((Animal) entity).yBodyRot + i);
+                entity.setYHeadRot(entity.getYHeadRot() + i);
+                this.getRiddenRotation(entity);
+//            ((LivingEntity) entity).yBodyRot = this.yBodyRot;
+            }
         }
     }
-    protected Vec2 getRiddenRotation(LivingEntity livingEntity) {
+    protected Vec2 getRiddenRotation(Entity livingEntity) {
         return new Vec2(livingEntity.getXRot() * 0.75F, livingEntity.getYRot());
     }
-    @Override
+//    @Override
     protected void tickRidden(Player player, Vec3 vec3) {
 
-        super.tickRidden(player, vec3);
+
         Vec2 vec2 = this.getRiddenRotation(player);
         float f = this.getYRot();
         float g = Mth.wrapDegrees(vec2.y - f);
 
         f += g * 0.1F;
         this.setRot(f, vec2.x);
-        this.yRotO = this.yBodyRot = this.yHeadRot = f;
+//        this.yRotO = this.yBodyRot = this.yHeadRot = f;
 
     }
 
 
 
-    @Override
+
     protected Vec3 getRiddenInput(Player player, Vec3 vec3) {
         float f = player.xxa * 1.2F;
         float g = player.zza;
@@ -165,6 +204,20 @@ public class CarEntity extends Animal implements ItemSteerable{
 
 
 
+    }
+
+    public void GetMovement() {
+        double d = -this.getGravity();
+        double e = 0.0;
+        float f = 0.05F;
+
+        Vec3 vec3 = this.getDeltaMovement();
+        this.setDeltaMovement(vec3.x * f, vec3.y + d, vec3.z * f);
+        this.deltaRotation *= f;
+        if (e > 0.0) {
+            Vec3 vec32 = this.getDeltaMovement();
+            this.setDeltaMovement(vec32.x, (vec32.y + e * (this.getDefaultGravity() / 0.65)) * 0.75, vec32.z);
+        }
     }
 
     @Nullable
@@ -215,10 +268,10 @@ public class CarEntity extends Animal implements ItemSteerable{
             return vec34 != null ? vec34 : this.position();
         }
     }
-    @Override
-    protected float getRiddenSpeed(Player player) {
-        return (float)(this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.225);
-    }
+//    @Override
+//    protected float getRiddenSpeed(Player player) {
+//        return (float)(this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.225);
+//    }
 
     @Override
         public boolean isPickable () {
@@ -235,6 +288,14 @@ public class CarEntity extends Animal implements ItemSteerable{
             return this.getFirstPassenger() instanceof Player player ? player : super.getControllingPassenger();
 
         }
+    protected void clampRotation(Entity entity) {
+        entity.setYBodyRot(this.getYRot());
+        float f = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+        float g = Mth.clamp(f, -105.0F, 105.0F);
+        entity.yRotO += g - f;
+        entity.setYRot(entity.getYRot() + g - f);
+        entity.setYHeadRot(entity.getYRot());
+    }
 
     @Override
         public InteractionResult interact (Player player, InteractionHand hand){

@@ -22,7 +22,7 @@ public  class CarTypes {
     public static void registerModEntityTypes(){
         CarsMod.LOGGER.info("Registering EntityTypes for "+ CarsMod.MOD_ID);
     }
-    public static void registerAttributes() {
-        FabricDefaultAttributeRegistry.register(Car, CarEntity.createAttributes());
-    }
+//    public static void registerAttributes() {
+//        FabricDefaultAttributeRegistry.register(Car);
+//    }
 }
